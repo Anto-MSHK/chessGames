@@ -8,26 +8,24 @@ namespace Chess
 {
     class Program
     {
-        public static Program program = new Program();
-
-        public void WriteError(string message)
+        static private void WriteError(string message)
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"Error: {message}\n");
             Console.ResetColor();
         }
-        public void WriteWarning(string message)
+        static private void WriteWarning(string message)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"Warning: {message}\n");
             Console.ResetColor();
         }
-        public void WriteImportant(string message, ConsoleColor color)
+        static private void WriteImportant(string message, ConsoleColor color)
         {
             Console.Write("\n");
-            for (int i=0; i < message.Length; i++)
+            for (int i = 0; i < message.Length; i++)
             {
-                if(message[i] == '{')
+                if (message[i] == '{')
                 {
                     Console.ForegroundColor = color;
                 }
@@ -42,8 +40,16 @@ namespace Chess
             }
             Console.WriteLine("\n");
         }
+        
+        static private void WriteCell(string str, ConsoleColor colorBG, ConsoleColor colorFG)
+        {
+            Console.BackgroundColor = colorBG;
+            Console.ForegroundColor = colorFG;
+            Console.Write(str);
+            Console.ResetColor();
+        }
 
-        public int ReadInt()
+        static private int ReadInt()
         {
             int posl = Console.CursorLeft, post = Console.CursorTop,
                 result;
@@ -62,13 +68,15 @@ namespace Chess
             Console.Write(str);
             return result;
         }
-        public char ReadChar()
+        static private char ReadChar()
         {
             int posl = Console.CursorLeft, post = Console.CursorTop;
             char result;
             string str = "";
+            bool isNumber;
             do
             {
+                isNumber = false;
                 Console.SetCursorPosition(posl, post);
                 str = Console.ReadLine();
                 Console.SetCursorPosition(posl, post);
@@ -76,134 +84,169 @@ namespace Chess
                 foreach (char c in str)
                     Console.Write(" ");
 
-            } while (!char.TryParse(str, out result));
+                for(int i = 0; i<=9; i++)
+                {
+                   if(str == $"{i}") {
+                        isNumber = true;
+                   }
+                }
+
+            } while (!char.TryParse(str, out result) || isNumber);
             Console.SetCursorPosition(posl, post);
             Console.Write(str);
             return result;
         }
 
-        public sealed class ChessTable
+        public static string[,] fakeTable = new string[8, 8] {  { "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓" },
+                                                                { "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░" },
+                                                                { "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓" },
+                                                                { "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░" },
+                                                                { "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓" },
+                                                                { "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░" },
+                                                                { "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓" },
+                                                                { "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░" }};
+
+        public static string[] piecesNames =  new string[6] { "king", "queen", "rook", "bishop", "horse", "pawn" };
+
+        static void convertCellToString(int x, int y, Cell[,] chessTable)
         {
-            public static ChessTable chessTable = new ChessTable();
-            
-            public string[,] table = new string[8, 8] {{ "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓" },
-                                                       { "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░" },
-                                                       { "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓" },
-                                                       { "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░" },
-                                                       { "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓" },
-                                                       { "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░" },
-                                                       { "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓" },
-                                                       { "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░", "▓▓▓", "░░░" }};
+            bool[] actualCell = chessTable[x, y].condition();
+            string type = chessTable[x, y].type;
+            int side = chessTable[x, y].side;
 
-            public string[] chessPieces = { " k ", " q ", " r ", " r ", " b ", " b ", " h ", " h ", " p ", " p ", " p ", " p ", " p ", " p ", " p ", " p "  };
-
-            int[][,] pieces = new int[2][,];
-
-            private ChessTable() {}
-
-            public string addPiece(int x, int y, int pieceNumber)
+            if (chessTable[x, y].isHere == true)
             {
-                if(x > 7 || y > 7)
-                    return "The position cannot be more than 8!";
-                if (x < 0 || y < 0)
-                    return "The position cannot be less than 0!";
-                if (table[x, y] == "░░░" || table[x, y] == "▓▓▓")
-                {
-                    table[x, y] = chessPieces[pieceNumber];
-                    return "";
-                } else
-                    return "A chess piece is already standing!";
-                
+                WriteCell(" ", ConsoleColor.Red, ConsoleColor.Red);
             }
 
-            public void print()
+            if (type == "cell")
+                Console.Write(fakeTable[x, y]);
+            else
             {
-                Console.Write($"   ");
-                for (int i = 0; i < 8; i++)
-                {
-                    Console.BackgroundColor = ConsoleColor.DarkGray;
-                    Console.ForegroundColor = ConsoleColor.Black;
+                if (actualCell[0] == true)
+                    WriteCell(" ", ConsoleColor.Red, ConsoleColor.Red);
+                else
+                    Console.Write(" ");
 
-                    Console.Write($" {i + 1} ");
-                    Console.ResetColor();
+                if (side == 1)
+                {
+                    WriteCell(type[0].ToString(), ConsoleColor.White, ConsoleColor.Black);
+                }
+                if (side == 2)
+                {
+                    WriteCell(type[0].ToString(), ConsoleColor.DarkGray, ConsoleColor.White);
                 }
 
-                for (int i = 0; i < 8; i++)
+                if (actualCell[1] == true)
+                    WriteCell(" ", ConsoleColor.Green, ConsoleColor.Green);
+                else
+                    Console.Write(" ");
+            }
+        }
+        static void printChessTable(Cell[,] chessTable)
+        {
+            
+            Console.Write($"   ");
+            for (int i = 0; i < 8; i++)
+            {
+                Console.BackgroundColor = ConsoleColor.DarkGray;
+                Console.ForegroundColor = ConsoleColor.Black;
+
+                Console.Write($" {i + 1} ");
+                Console.ResetColor();
+            }
+
+            for (int i = 0; i < 8; i++)
+            {
+                Console.WriteLine($"");
+                for (int j = 0; j < 8; j++)
                 {
-                    Console.WriteLine($"");
-                    for (int j = 0; j < 8; j++)
+                    if (j == 0)
                     {
-                        if (j == 0)
-                        {
-                            Console.BackgroundColor = ConsoleColor.DarkGray;
-                            Console.ForegroundColor = ConsoleColor.Black;
-                            Console.Write($" {i+1} ");
-                            Console.ResetColor();
-                        }
-                        Console.Write($"{table[i, j]}");
+                        Console.BackgroundColor = ConsoleColor.DarkGray;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.Write($" {i + 1} ");
+                        Console.ResetColor();
                     }
+                    convertCellToString(i, j, chessTable);
                 }
-                Console.WriteLine($"\n");
             }
-            
+
+            Console.Write($"\n");
         }
 
-        class Player
+
+
+        static void addChessPiece(Player player)
         {
-            private int[,] piecesPos = new int[16, 2];
-            private string[] chessPieces = { "king", "queen", "1 rook", "2 rook", "1 bishop", "2 bishop", "1 horse", "2 horse",
-                                             "1 pawn", "2 pawn", " 3 pawn", "4 pawn", "5 pawn", "6 pawn", "7 pawn", "8 pawn" };
-            int playerNum;
-            public Player(int playerNum)
+            ChessTable cheseTable = ChessTable.GetInstance();
+            char operation;
+            int isAdded = 0,
+                index = 0;
+            string curentPiece = "";
+            do
             {
-                this.playerNum = playerNum;
-            }
-            public int[,] enterCoordinates()
-            {
-                string isAdded = "";
-                for (int i = 0; i < chessPieces.Length; i++)
+                printChessTable(cheseTable.table);
+
+                WriteImportant("Enter the positions of the chess pieces of the {" + player.side + "} player: ", ConsoleColor.Red);
+
+                Console.Write($"Select a cheese piece:");
+                operation = ReadChar();
+                Console.WriteLine("");
+
+                if (operation == 'e') {  Console.Clear(); break; }
+
+                do
                 {
-                    do
+                    if (isAdded != 0) {
+                        printChessTable(cheseTable.table);
+                        WriteImportant("Enter the positions of the chess pieces of the {" + player.side + "} player: ", ConsoleColor.Red);
+                        WriteError(isAdded.ToString());
+                    }
+
+                    foreach (string p in piecesNames)
                     {
-                        if (playerNum == 1)
-                            program.WriteImportant("Enter the positions of the chess pieces of the {first player}: ", ConsoleColor.Red);
-                        else if (playerNum == 2)
-                            program.WriteImportant("Enter the positions of the chess pieces of the {second player}: ", ConsoleColor.Blue);
+                        if (p[0] == operation)
+                            curentPiece = p;
+                    }
+                    
+                    Console.WriteLine($"Enter position {curentPiece}:");
+                    WriteWarning("Only numbers! 1 => ? <= 8.");
 
-                        ChessTable.chessTable.print();
-                        
-                        if (isAdded != "")
-                            program.WriteError(isAdded);
+                    Console.Write($"x: ");
 
-                        Console.WriteLine($"Enter position {chessPieces[i]}:");
-                        program.WriteWarning("Only numbers! 1 => ? <= 8.");
+                    int x = ReadInt();
 
-                        Console.Write($"x: ");
+                    Console.Write($"\ny: ");
 
-                        piecesPos[i, 0] = program.ReadInt() - 1;
+                    int y = ReadInt();
 
-                        Console.Write($"\ny: ");
+                    isAdded = player.enterCoordinates(x, y, index, operation);
 
-                        piecesPos[i, 1] = program.ReadInt() - 1;
+                    Console.Clear();
 
-                        isAdded = ChessTable.chessTable.addPiece(piecesPos[i, 0], piecesPos[i, 1], i);
-                        Console.Clear();
 
-                    } while(isAdded != "");
-                }
-                return piecesPos;
-            }
+                } while (isAdded != 0);
+                index++;
+            } while (operation != 'e');
+
         }
 
         static void Main(string[] args)
         {
+
             Player firstPlayer = new Player(1);
             Player secondPlayer = new Player(2);
             
-            firstPlayer.enterCoordinates();
-            secondPlayer.enterCoordinates();
-            Console.Clear();
-            ChessTable.chessTable.print();
+
+            addChessPiece(firstPlayer);
+            addChessPiece(secondPlayer);
+
+            foreach (Cell c in ChessTable._instance.table) {
+                if(c.type=="pawn")
+                    printChessTable(ChessTable._instance.printPawn(c.moves));
+            }
+            
             Console.ReadKey();
         }
     }
