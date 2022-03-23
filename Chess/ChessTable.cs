@@ -63,13 +63,11 @@ namespace Chess
         {
             Cell pieceMarked = table[x, y];
               
-            if(pieceInitiator.side == pieceMarked.side && pieceInitiator.coordinates[dir][0] == -1 
-                && pieceInitiator.coordinates[dir][1] == -1) { 
+            if(pieceInitiator.side == pieceMarked.side) { 
                 pieceMarked.isProtected = true;
                 pieceInitiator.coordinates[dir] = new int[] { x, y };
             }
-            if (pieceInitiator.side != pieceMarked.side && pieceMarked.side != 3 && pieceInitiator.coordinates[dir][0] == -1
-                && pieceInitiator.coordinates[dir][1] == -1) {
+            if (pieceInitiator.side != pieceMarked.side) {
                 pieceMarked.isAttacked = true;
                 pieceInitiator.coordinates[dir] = new int[] { x, y };
             }

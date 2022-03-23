@@ -29,7 +29,7 @@ namespace Chess
             this.posX = posX;
             this.posY = posY;
 
-            coordinates[0] = new int[] { -1, -1 };
+            coordinates[0] = new int[] { 8, 8 };
             coordinates[1] = new int[] { -1, -1 };
             coordinates[2] = new int[] { -1, -1 };
             coordinates[3] = new int[] { -1, -1 };
@@ -47,7 +47,7 @@ namespace Chess
             this.posX = posX;
             this.posY = posY;
 
-            coordinates[0] = new int[] { -1, -1 };
+            coordinates[0] = new int[] { 8, 8 };
             coordinates[1] = new int[] { -1, -1 };
             coordinates[2] = new int[] { -1, -1 };
             coordinates[3] = new int[] { -1, -1 };
@@ -99,13 +99,16 @@ namespace Chess
 
             moves = new int[64][];
 
+            int curX = posX, curY = posY;
             for (int i = posX+1; i < 8; i++)
             {
                 for (int j = posY+1; j < 8; j++)
                 {
-                    if((i == j)) {
+                    if ((i - curX == 1) && (j - curY == 1) && (coordinates[0][0] > i || coordinates[0][1] > j)) {
                         moves[actual] = new int[] { i, j };
                         chessTable.mark(moves[actual][0], moves[actual][1], this, 0);
+                        curX = i;
+                        curY = j;
                         actual++;
                     }
                 }
