@@ -62,12 +62,19 @@ namespace Chess
         public void mark (int x, int y, Cell pieceInitiator, int dir)
         {
             Cell pieceMarked = table[x, y];
-              
-            if(pieceInitiator.side == pieceMarked.side) { 
+
+            Cell pieceObsolete = table[pieceInitiator.coordinates[dir][0], pieceInitiator.coordinates[dir][1]];
+
+            if(pieceInitiator.type == "bishop" || pieceInitiator.type == "rook" || pieceInitiator.type == "queen") { 
+                pieceObsolete.isProtected = false;
+                pieceObsolete.isAttacked = false;
+            }
+
+            if (pieceInitiator.side == pieceMarked.side) {
                 pieceMarked.isProtected = true;
                 pieceInitiator.coordinates[dir] = new int[] { x, y };
             }
-            if (pieceInitiator.side != pieceMarked.side) {
+            if (pieceInitiator.side != pieceMarked.side && pieceMarked.side != 3) {
                 pieceMarked.isAttacked = true;
                 pieceInitiator.coordinates[dir] = new int[] { x, y };
             }

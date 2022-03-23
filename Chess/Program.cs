@@ -116,9 +116,9 @@ namespace Chess
 
 
             if (type == "cell") {
-                //if (actualCell.isHere == true)
-                //  WriteCell("   ", ConsoleColor.White, ConsoleColor.Black);  //output of moves
-                //else
+                if (actualCell.isHere == true)
+                 WriteCell("   ", ConsoleColor.White, ConsoleColor.Black);  //output of moves
+                else
                 Console.Write(fakeTable[x, y]);
             }
             else
