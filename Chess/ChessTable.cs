@@ -9,7 +9,6 @@ namespace Chess
     public class ChessTable
     {
 
-        private Cell emptyСell = new Cell();
         public Cell[,] table = new Cell[8, 8];
 
         private ChessTable()
@@ -18,7 +17,7 @@ namespace Chess
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    table[i, j] = emptyСell;
+                    table[i, j] = new Cell(i, j);
                 }
             }
         }
@@ -34,6 +33,16 @@ namespace Chess
             return _instance;
         }
 
+        private void updating()
+        {
+            for(int i = 0; i < 8; i++){
+                for (int j = 0; j < 8; j++)
+                {
+                    table[i, j].condition();
+                }
+            }
+        }
+
         public int addPiece(int x, int y, Cell piece)
         {
             if (x > 7 || y > 7)
@@ -43,21 +52,29 @@ namespace Chess
             if (table[x, y].type == "cell")
             {
                 table[x, y] = piece;
+                piece.posX = x;
+                piece.posY = y;
+                updating();
                 return 0;
             }
             return 1;
         }
-
-        public Cell[,] printPawn(int[,] moves)
+        public void mark (int x, int y, Cell pieceInitiator, int dir)
         {
-            ChessTable chessTable = ChessTable.GetInstance();
-            Cell[,] fakeChessTable = chessTable.table;
-
-            
-            //fakeChessTable[moves[0, 0], moves[0, 1]].isHere = true;
-            //fakeChessTable[moves[1, 0], moves[1, 1]].isHere = true;
-
-            return fakeChessTable;
+            Cell pieceMarked = table[x, y];
+              
+            if(pieceInitiator.side == pieceMarked.side && pieceInitiator.coordinates[dir][0] == -1 
+                && pieceInitiator.coordinates[dir][1] == -1) { 
+                pieceMarked.isProtected = true;
+                pieceInitiator.coordinates[dir] = new int[] { x, y };
+            }
+            if (pieceInitiator.side != pieceMarked.side && pieceMarked.side != 3 && pieceInitiator.coordinates[dir][0] == -1
+                && pieceInitiator.coordinates[dir][1] == -1) {
+                pieceMarked.isAttacked = true;
+                pieceInitiator.coordinates[dir] = new int[] { x, y };
+            }
+            else
+                pieceMarked.isHere = true;
         }
 
     }

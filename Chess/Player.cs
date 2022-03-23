@@ -23,25 +23,25 @@ namespace Chess
             switch (operation)
             {
                 case 'k':
-                    piece = new Cell("king", side);
+                    piece = new Cell("king", side, x, y);
                     break;
                 case 'q':
-                    piece = new Cell("queen", side);
+                    piece = new Cell("queen", side, x, y);
                     break;
                 case 'r':
-                    piece = new Cell("rook", side);
+                    piece = new Cell("rook", side, x, y);
                     break;
                 case 'b':
-                    piece = new Cell("bishop", side);
+                    piece = new Cell("bishop", side, x, y);
                     break;
                 case 'h':
-                    piece = new Cell("horse", side);
+                    piece = new Cell("horse", side, x, y);
                     break;
                 case 'p':
-                    piece = new Cell("pawn", side);
+                    piece = new Cell("pawn", side, x, y);
                     break;
                 default:
-                    piece = new Cell();
+                    piece = new Cell(x, y);
                     break;
             }
 
@@ -49,8 +49,7 @@ namespace Chess
 
             if (pieceAddSuccess == 0)
             {
-                piece.posX = x - 1;
-                piece.posY = y - 1;
+                
             }
 
             return pieceAddSuccess;

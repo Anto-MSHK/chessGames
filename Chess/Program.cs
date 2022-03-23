@@ -110,34 +110,34 @@ namespace Chess
 
         static void convertCellToString(int x, int y, Cell[,] chessTable)
         {
-            bool[] actualCell = chessTable[x, y].condition();
+            Cell actualCell = chessTable[x, y];
             string type = chessTable[x, y].type;
             int side = chessTable[x, y].side;
 
-            if (chessTable[x, y].isHere == true)
-            {
-                WriteCell(" ", ConsoleColor.Red, ConsoleColor.Red);
-            }
 
-            if (type == "cell")
+            if (type == "cell") {
+                //if (actualCell.isHere == true)
+                //  WriteCell("   ", ConsoleColor.White, ConsoleColor.Black);  //output of moves
+                //else
                 Console.Write(fakeTable[x, y]);
+            }
             else
             {
-                if (actualCell[0] == true)
+                if (actualCell.isAttacked == true)
                     WriteCell(" ", ConsoleColor.Red, ConsoleColor.Red);
                 else
                     Console.Write(" ");
 
-                if (side == 1)
+                if (side == 0)
                 {
                     WriteCell(type[0].ToString(), ConsoleColor.White, ConsoleColor.Black);
                 }
-                if (side == 2)
+                if (side == 1)
                 {
-                    WriteCell(type[0].ToString(), ConsoleColor.DarkGray, ConsoleColor.White);
+                    WriteCell(type[0].ToString(), ConsoleColor.DarkBlue, ConsoleColor.White);
                 }
 
-                if (actualCell[1] == true)
+                if (actualCell.isProtected == true)
                     WriteCell(" ", ConsoleColor.Green, ConsoleColor.Green);
                 else
                     Console.Write(" ");
@@ -188,7 +188,7 @@ namespace Chess
             {
                 printChessTable(cheseTable.table);
 
-                WriteImportant("Enter the positions of the chess pieces of the {" + player.side + "} player: ", ConsoleColor.Red);
+                WriteImportant("Enter the positions of the chess pieces of the {" + Convert.ToInt32(player.side + 1) + "} player: ", ConsoleColor.Red);
 
                 Console.Write($"Select a cheese piece:");
                 operation = ReadChar();
@@ -200,7 +200,7 @@ namespace Chess
                 {
                     if (isAdded != 0) {
                         printChessTable(cheseTable.table);
-                        WriteImportant("Enter the positions of the chess pieces of the {" + player.side + "} player: ", ConsoleColor.Red);
+                        WriteImportant("Enter the positions of the chess pieces of the {" + Convert.ToInt32(player.side+1) + "} player: ", ConsoleColor.Red);
                         WriteError(isAdded.ToString());
                     }
 
@@ -235,17 +235,12 @@ namespace Chess
         static void Main(string[] args)
         {
 
-            Player firstPlayer = new Player(1);
-            Player secondPlayer = new Player(2);
+            Player firstPlayer = new Player(0);
+            Player secondPlayer = new Player(1);
             
 
             addChessPiece(firstPlayer);
             addChessPiece(secondPlayer);
-
-            foreach (Cell c in ChessTable._instance.table) {
-                if(c.type=="pawn")
-                    printChessTable(ChessTable._instance.printPawn(c.moves));
-            }
             
             Console.ReadKey();
         }
