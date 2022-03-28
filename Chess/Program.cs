@@ -78,7 +78,7 @@ namespace Chess
             {
                 isNumber = false;
                 Console.SetCursorPosition(posl, post);
-                str = Console.ReadLine();
+                str = Console.ReadLine().ToLower();
                 Console.SetCursorPosition(posl, post);
 
                 foreach (char c in str)
@@ -116,9 +116,9 @@ namespace Chess
 
 
             if (type == "cell") {
-                if (actualCell.isHere == true)
-                 WriteCell("   ", ConsoleColor.White, ConsoleColor.Black);  //output of moves
-                else
+                //if (actualCell.isHere == true)
+                // WriteCell("   ", ConsoleColor.White, ConsoleColor.Black);  //output of moves
+               // else
                 Console.Write(fakeTable[x, y]);
             }
             else
@@ -175,7 +175,22 @@ namespace Chess
             Console.Write($"\n");
         }
 
-
+        static string decryption(int errCode)
+        {
+            switch (errCode)
+            {
+                case 1:
+                    return "The chess piece in this position is already standing!";
+                case 2:
+                    return "The coordinates of the chess piece must be less than 8!";
+                case 3:
+                    return "The coordinates of the chess piece must be greater than 1!";
+                case 4:
+                    return "A pawn in this position turns into any of the pieces!";
+                default:
+                    return "";
+            }
+        }
 
         static void addChessPiece(Player player)
         {
@@ -190,7 +205,7 @@ namespace Chess
 
                 WriteImportant("Enter the positions of the chess pieces of the {" + Convert.ToInt32(player.side + 1) + "} player: ", ConsoleColor.Red);
 
-                Console.Write($"Select a cheese piece:");
+                Console.Write($"Select a chess piece:");
                 operation = ReadChar();
                 Console.WriteLine("");
 
@@ -201,7 +216,7 @@ namespace Chess
                     if (isAdded != 0) {
                         printChessTable(cheseTable.table);
                         WriteImportant("Enter the positions of the chess pieces of the {" + Convert.ToInt32(player.side+1) + "} player: ", ConsoleColor.Red);
-                        WriteError(isAdded.ToString());
+                        WriteError(decryption(isAdded));
                     }
 
                     foreach (string p in piecesNames)

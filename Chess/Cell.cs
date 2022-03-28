@@ -213,8 +213,7 @@ namespace Chess
             int a = bishop();
             int[][] bishopDirections = new int [8][];
             coordinates.CopyTo(bishopDirections, 0);
-
-            resetCoordinates();
+            var b = coordinates;
 
             rook(a);
             int[][] rookDirections = new int[8][];
@@ -228,7 +227,17 @@ namespace Chess
 
         private void king()
         {
+            moves = new int[8][];
+                moves[0] = new int[] { posX - 1, posY - 1 };
+                moves[1] = new int[] { posX - 1, posY };
+                moves[2] = new int[] { posX - 1, posY + 1 };
+                moves[3] = new int[] { posX + 1, posY };
+                moves[4] = new int[] { posX + 1, posY - 1 };
+                moves[5] = new int[] { posX, posY - 1 };
+                moves[6] = new int[] { posX + 1, posY + 1 };
+                moves[7] = new int[] { posX, posY + 1 };
 
+            marking();
         }
 
         public void condition()
