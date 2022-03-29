@@ -11,9 +11,9 @@ namespace Chess
         public string type;
         public int posX;
         public int posY;
-        public int[][] moves = new int[100][];
-        public bool isAttacked;
-        public bool isProtected;
+        public int[][] moves = new int[64][];
+        public List<int[]> isAttacked = new List<int[]>();
+        public List<int[]> isProtected = new List<int[]>();
         public bool isHere = false;
         public int side;
         public int NumberOf;
@@ -37,8 +37,6 @@ namespace Chess
         {
             type = "cell";
             side = 3;
-            isAttacked = false;
-            isProtected = false;
             this.posX = posX;
             this.posY = posY;
         }
@@ -60,7 +58,7 @@ namespace Chess
             for (int i = 0; i < moves.Length; i++)
                 if (moves[i] != null && (moves[i][0] < 8 && moves[i][1] < 8 && moves[i][0] > -1 && moves[i][1] > -1))
                 {
-                    chessTable.mark(moves[i][0], moves[i][1], this, 0);
+                    chessTable.mark(moves[i][0], moves[i][1], this, i);
                 }
         }
 
@@ -213,7 +211,6 @@ namespace Chess
             int a = bishop();
             int[][] bishopDirections = new int [8][];
             coordinates.CopyTo(bishopDirections, 0);
-            var b = coordinates;
 
             rook(a);
             int[][] rookDirections = new int[8][];

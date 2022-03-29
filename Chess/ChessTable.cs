@@ -75,18 +75,24 @@ namespace Chess
 
             Cell pieceObsolete = table[pieceInitiator.coordinates[dir][0], pieceInitiator.coordinates[dir][1]];
 
-            if(pieceInitiator.type == "bishop" || pieceInitiator.type == "rook" || pieceInitiator.type == "queen") { 
-                pieceObsolete.isProtected = false;
-                pieceObsolete.isAttacked = false;
-            }
+            int[] coordInitiator = new int[] { pieceInitiator.posX, pieceInitiator.posY };
 
-            if (pieceInitiator.side == pieceMarked.side) {
-                pieceMarked.isProtected = true;
+            int[] currentCoord = pieceMarked.isProtected.Find(coord => coord != null && coord.SequenceEqual(coordInitiator));
+            if (pieceInitiator.side == pieceMarked.side && currentCoord == null) {
+                pieceMarked.isProtected.Add(new int[] { pieceInitiator.posX, pieceInitiator.posY });
                 pieceInitiator.coordinates[dir] = new int[] { x, y };
+                int obsolete = pieceObsolete.isProtected.FindIndex(coord => coord != null && coord.SequenceEqual(coordInitiator));
+                if(obsolete != -1 && pieceObsolete.coordinates[dir] != pieceMarked.coordinates[dir])
+                    pieceObsolete.isProtected[obsolete] = null;
+
             }
+            currentCoord = pieceMarked.isAttacked.Find(coord => coord != null && coord.SequenceEqual(coordInitiator));
             if (pieceInitiator.side != pieceMarked.side && pieceMarked.side != 3) {
-                pieceMarked.isAttacked = true;
+                pieceMarked.isAttacked.Add(new int[] { pieceInitiator.posX, pieceInitiator.posY });
                 pieceInitiator.coordinates[dir] = new int[] { x, y };
+                int obsolete = pieceObsolete.isAttacked.FindIndex(coord => coord != null && coord.SequenceEqual(coordInitiator));
+                if (obsolete != -1 && pieceObsolete.coordinates[dir] != pieceMarked.coordinates[dir])
+                    pieceObsolete.isAttacked[obsolete] = null;
             }
             else
                 pieceMarked.isHere = true;

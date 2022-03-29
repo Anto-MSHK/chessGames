@@ -113,18 +113,26 @@ namespace Chess
             Cell actualCell = chessTable[x, y];
             string type = chessTable[x, y].type;
             int side = chessTable[x, y].side;
-
+            bool isProtected = false, isAttacked = false;
 
             if (type == "cell") {
                 //if (actualCell.isHere == true)
-                // WriteCell("   ", ConsoleColor.White, ConsoleColor.Black);  //output of moves
-               // else
+                 //WriteCell("   ", ConsoleColor.White, ConsoleColor.Black);  //output of moves
+                //else
                 Console.Write(fakeTable[x, y]);
             }
             else
             {
-                if (actualCell.isAttacked == true)
-                    WriteCell(" ", ConsoleColor.Red, ConsoleColor.Red);
+                if (actualCell.isProtected != null)
+                    foreach (int[] protd in actualCell.isProtected)
+                    {
+                        if (protd != null)
+                            isProtected = true;
+                        break;
+                    }
+
+                if (isProtected == true)
+                    WriteCell(" ", ConsoleColor.Green, ConsoleColor.Green);
                 else
                     Console.Write(" ");
 
@@ -137,8 +145,16 @@ namespace Chess
                     WriteCell(type[0].ToString(), ConsoleColor.DarkBlue, ConsoleColor.White);
                 }
 
-                if (actualCell.isProtected == true)
-                    WriteCell(" ", ConsoleColor.Green, ConsoleColor.Green);
+                if (actualCell.isAttacked != null)
+                    foreach (int[] atackd in actualCell.isAttacked)
+                    {
+                        if (atackd != null)
+                            isAttacked = true;
+                        break;
+                    }
+
+                if (isAttacked == true)
+                    WriteCell(" ", ConsoleColor.Red, ConsoleColor.Red);
                 else
                     Console.Write(" ");
             }
