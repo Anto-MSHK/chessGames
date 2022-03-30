@@ -54,5 +54,14 @@ namespace Chess
 
             return pieceAddSuccess;
         }
+
+        public int deletePiece(int x, int y)
+        {
+            int pieceDeleteSuccess = cheseTable.deletePiece(x - 1, y - 1);
+
+            return pieceDeleteSuccess;
+        }
     }
+
+
 }

@@ -41,7 +41,7 @@ namespace Chess
             this.posY = posY;
         }
 
-        private void resetCoordinates()
+        public void resetCoordinates()
         {
             coordinates[0] = new int[] { 7, 7 };
             coordinates[1] = new int[] { 7, 0 };

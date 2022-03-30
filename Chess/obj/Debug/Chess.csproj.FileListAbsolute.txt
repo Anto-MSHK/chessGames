@@ -19,3 +19,10 @@ C:\Users\student\Desktop\chessGames-main\Chess\obj\Debug\Chess.csproj.AssemblyRe
 C:\Users\student\Desktop\chessGames-main\Chess\obj\Debug\Chess.csproj.CoreCompileInputs.cache
 C:\Users\student\Desktop\chessGames-main\Chess\obj\Debug\Chess.exe
 C:\Users\student\Desktop\chessGames-main\Chess\obj\Debug\Chess.pdb
+D:\Chess_v.22222\Chess\Chess\bin\Debug\Chess.exe.config
+D:\Chess_v.22222\Chess\Chess\bin\Debug\Chess.exe
+D:\Chess_v.22222\Chess\Chess\bin\Debug\Chess.pdb
+D:\Chess_v.22222\Chess\Chess\obj\Debug\Chess.csproj.AssemblyReference.cache
+D:\Chess_v.22222\Chess\Chess\obj\Debug\Chess.csproj.CoreCompileInputs.cache
+D:\Chess_v.22222\Chess\Chess\obj\Debug\Chess.exe
+D:\Chess_v.22222\Chess\Chess\obj\Debug\Chess.pdb

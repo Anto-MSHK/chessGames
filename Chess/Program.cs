@@ -17,7 +17,7 @@ namespace Chess
         static private void WriteWarning(string message)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"Warning: {message}\n");
+            Console.WriteLine($"Warning: {message}");
             Console.ResetColor();
         }
         static private void WriteImportant(string message, ConsoleColor color)
@@ -62,6 +62,11 @@ namespace Chess
 
                 foreach (char c in str)
                     Console.Write(" ");
+
+                if(str == "e")
+                {
+                    return 0;
+                }
 
             } while (!int.TryParse(str, out result));
             Console.SetCursorPosition(posl, post);
@@ -116,9 +121,9 @@ namespace Chess
             bool isProtected = false, isAttacked = false;
 
             if (type == "cell") {
-                //if (actualCell.isHere == true)
-                 //WriteCell("   ", ConsoleColor.White, ConsoleColor.Black);  //output of moves
-                //else
+               // if (actualCell.isHere == true)
+                // WriteCell("   ", ConsoleColor.White, ConsoleColor.Black);  //output of moves
+               // else
                 Console.Write(fakeTable[x, y]);
             }
             else
@@ -126,9 +131,10 @@ namespace Chess
                 if (actualCell.isProtected != null)
                     foreach (int[] protd in actualCell.isProtected)
                     {
-                        if (protd != null)
+                        if (protd != null) { 
                             isProtected = true;
-                        break;
+                            break;
+                        }
                     }
 
                 if (isProtected == true)
@@ -148,9 +154,10 @@ namespace Chess
                 if (actualCell.isAttacked != null)
                     foreach (int[] atackd in actualCell.isAttacked)
                     {
-                        if (atackd != null)
+                        if (atackd != null) {
                             isAttacked = true;
-                        break;
+                            break;
+                        }
                     }
 
                 if (isAttacked == true)
@@ -208,31 +215,37 @@ namespace Chess
             }
         }
 
-        static void addChessPiece(Player player)
+        static void basicOutput(Player player)
         {
             ChessTable cheseTable = ChessTable.GetInstance();
+
+            printChessTable(cheseTable.table);
+            WriteImportant("Enter the positions of the chess pieces of the {" + Convert.ToInt32(player.side + 1) + "} player: ", ConsoleColor.Red);
+        }
+
+        static void addChessPiece(Player player)
+        {
             char operation;
             int isAdded = 0,
                 index = 0;
             string curentPiece = "";
-            do
-            {
-                printChessTable(cheseTable.table);
 
-                WriteImportant("Enter the positions of the chess pieces of the {" + Convert.ToInt32(player.side + 1) + "} player: ", ConsoleColor.Red);
+            do {
+                basicOutput(player);
 
                 Console.Write($"Select a chess piece:");
                 operation = ReadChar();
                 Console.WriteLine("");
 
                 if (operation == 'e') {  Console.Clear(); break; }
-
+                
                 do
                 {
+                    if (operation == 'd') { Console.Clear(); deleteChessPiece(player); break; }
+
                     if (isAdded != 0) {
-                        printChessTable(cheseTable.table);
-                        WriteImportant("Enter the positions of the chess pieces of the {" + Convert.ToInt32(player.side+1) + "} player: ", ConsoleColor.Red);
-                        WriteError(decryption(isAdded));
+                    basicOutput(player);
+                    WriteError(decryption(isAdded));
                     }
 
                     foreach (string p in piecesNames)
@@ -243,14 +256,27 @@ namespace Chess
                     
                     Console.WriteLine($"Enter position {curentPiece}:");
                     WriteWarning("Only numbers! 1 => ? <= 8.");
-
+                    WriteWarning("To deselect a chess piece, press e.");
+                    Console.Write("\n");
+                        
                     Console.Write($"x: ");
 
                     int x = ReadInt();
 
+                    if (x == 0)
+                    {
+                        Console.Clear();
+                        break;
+                    }
+
                     Console.Write($"\ny: ");
 
                     int y = ReadInt();
+
+                    if (y == 0) { 
+                        Console.Clear();
+                        break;
+                    }
 
                     isAdded = player.enterCoordinates(x, y, index, operation);
 
@@ -260,18 +286,59 @@ namespace Chess
                 } while (isAdded != 0);
                 index++;
             } while (operation != 'e');
-
         }
 
-        static void Main(string[] args)
+        static void deleteChessPiece(Player player)
+        {
+            int isDeleted = 0;
+            ChessTable cheseTable = ChessTable.GetInstance();
+
+            basicOutput(player);
+
+            Console.WriteLine($"Remove a piece from the chessboard:");
+            Console.WriteLine($"Enter position:");
+            WriteWarning("Only numbers! 1 => ? <= 8.");
+            Console.Write("\n");
+
+            Console.Write($"x: ");
+
+            int x = ReadInt();
+
+            if (x == 0)
+            {
+                Console.Clear();
+                return;
+            }
+
+            Console.Write($"\ny: ");
+
+            int y = ReadInt();
+
+            if (y == 0)
+            {
+                Console.Clear();
+                return;
+            }
+
+            isDeleted = player.deletePiece(x, y);
+
+            Console.Clear();
+
+        }
+        static void placementChessPieces(Player player)
+        {
+            addChessPiece(player);
+        }
+
+
+            static void Main(string[] args)
         {
 
             Player firstPlayer = new Player(0);
             Player secondPlayer = new Player(1);
-            
 
-            addChessPiece(firstPlayer);
-            addChessPiece(secondPlayer);
+            placementChessPieces(firstPlayer);
+            placementChessPieces(secondPlayer);
             
             Console.ReadKey();
         }
