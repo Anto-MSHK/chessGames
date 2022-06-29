@@ -19,6 +19,7 @@ C:\Users\student\Desktop\chessGames-main\Chess\obj\Debug\Chess.csproj.AssemblyRe
 C:\Users\student\Desktop\chessGames-main\Chess\obj\Debug\Chess.csproj.CoreCompileInputs.cache
 C:\Users\student\Desktop\chessGames-main\Chess\obj\Debug\Chess.exe
 C:\Users\student\Desktop\chessGames-main\Chess\obj\Debug\Chess.pdb
+<<<<<<< HEAD
 C:\Anton\Учёба\С#\v2Chess\chessGames\Chess\bin\Debug\Chess.exe.config
 C:\Anton\Учёба\С#\v2Chess\chessGames\Chess\bin\Debug\Chess.exe
 C:\Anton\Учёба\С#\v2Chess\chessGames\Chess\bin\Debug\Chess.pdb
@@ -26,3 +27,12 @@ C:\Anton\Учёба\С#\v2Chess\chessGames\Chess\obj\Debug\Chess.csprojAssemblyR
 C:\Anton\Учёба\С#\v2Chess\chessGames\Chess\obj\Debug\Chess.csproj.CoreCompileInputs.cache
 C:\Anton\Учёба\С#\v2Chess\chessGames\Chess\obj\Debug\Chess.exe
 C:\Anton\Учёба\С#\v2Chess\chessGames\Chess\obj\Debug\Chess.pdb
+=======
+D:\Chess_v.22222\Chess\Chess\bin\Debug\Chess.exe.config
+D:\Chess_v.22222\Chess\Chess\bin\Debug\Chess.exe
+D:\Chess_v.22222\Chess\Chess\bin\Debug\Chess.pdb
+D:\Chess_v.22222\Chess\Chess\obj\Debug\Chess.csproj.AssemblyReference.cache
+D:\Chess_v.22222\Chess\Chess\obj\Debug\Chess.csproj.CoreCompileInputs.cache
+D:\Chess_v.22222\Chess\Chess\obj\Debug\Chess.exe
+D:\Chess_v.22222\Chess\Chess\obj\Debug\Chess.pdb
+>>>>>>> 081c05da8a5c6132cec3a041e8f6602247f1daed
