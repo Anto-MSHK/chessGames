@@ -11,253 +11,262 @@ namespace Chess
         public string type;
         public int posX;
         public int posY;
-        public int[][] moves = new int[64][];
+        public int[][] movingPoints = new int[64][];
         public List<int[]> isAttacked = new List<int[]>();
         public List<int[]> isProtected = new List<int[]>();
         public bool isHere = false;
         public int side;
         public int NumberOf;
 
-        public int[][] coordinates = new int[8][];
+        public int[][] directions = new int[8][];
 
         private ChessTable chessTable;
-        public Cell(string type, int side, int posX, int posY)
+
+        private void ResetDirections()
+        {
+            directions[0] = new int[] { 7, 7 };
+            directions[1] = new int[] { 7, 0 };
+            directions[2] = new int[] { 0, 0 };
+            directions[3] = new int[] { 0, 7 };
+            directions[4] = new int[] { 7, 7 };
+            directions[5] = new int[] { 7, 0 };
+            directions[6] = new int[] { 0, 0 };
+            directions[7] = new int[] { 0, 7 };
+        }
+
+        public Cell(string type, int side, int posX, int posY) // constructor for creating shapes
         {   
             this.side = side;
             this.type = type;
             this.posX = posX;
             this.posY = posY;
 
-            resetCoordinates();
+            ResetDirections();
 
             chessTable = ChessTable.GetInstance();
         }
 
-        public Cell(int posX, int posY)
+        public Cell(int posX, int posY) // constructor for empty cells
         {
-            type = "cell";
-            side = 3;
+            this.type = "cell";
+            this.side = 3;
             this.posX = posX;
             this.posY = posY;
         }
 
-        private void resetCoordinates()
-        {
-            coordinates[0] = new int[] { 7, 7 };
-            coordinates[1] = new int[] { 7, 0 };
-            coordinates[2] = new int[] { 0, 0 };
-            coordinates[3] = new int[] { 0, 7 };
-            coordinates[4] = new int[] { 7, 7 };
-            coordinates[5] = new int[] { 7, 0 };
-            coordinates[6] = new int[] { 0, 0 };
-            coordinates[7] = new int[] { 0, 7 };
-        }
 
-        private void marking()
+        private void MarkAllMovePointsOfIndexedPieces()
         {
-            for (int i = 0; i < moves.Length; i++)
-                if (moves[i] != null && (moves[i][0] < 8 && moves[i][1] < 8 && moves[i][0] > -1 && moves[i][1] > -1))
+            for (int i = 0; i < movingPoints.Length; i++)
+                if (movingPoints[i] != null && (movingPoints[i][0] < 8 && movingPoints[i][1] < 8 && movingPoints[i][0] > -1 && movingPoints[i][1] > -1))
                 {
-                    chessTable.mark(moves[i][0], moves[i][1], this, i);
+                    chessTable.Mark(movingPoints[i][0], movingPoints[i][1], this, i);
                 }
         }
 
-        private void pawn()
+        private void Pawn()
         {
-            moves = new int[2][];
+            movingPoints = new int[2][];
             if (side == 0)
             {
-                moves[0] = new int[] { posX - 1, posY - 1 };
-                moves[1] = new int[] { posX - 1, posY + 1 };
+                movingPoints[0] = new int[] { posX - 1, posY - 1 };
+                movingPoints[1] = new int[] { posX - 1, posY + 1 };
+
             } else if (side == 1)
             {
-                moves[0] = new int[] { posX + 1, posY - 1 };
-                moves[1] = new int[] { posX + 1, posY + 1 };
+                movingPoints[0] = new int[] { posX + 1, posY - 1 };
+                movingPoints[1] = new int[] { posX + 1, posY + 1 };
             }
-            marking();
+            MarkAllMovePointsOfIndexedPieces();
         }
 
-        private void horse()
+        private void Horse()
         {
-            moves = new int[8][];
+            movingPoints = new int[8][];
 
-            moves[0] = new int[] { posX - 2, posY + 1 };
-            moves[1] = new int[] { posX - 1, posY + 2 };
-            moves[2] = new int[] { posX + 2, posY + 1 };
-            moves[3] = new int[] { posX + 1, posY + 2 };
+            movingPoints[0] = new int[] { posX - 2, posY + 1 };
+            movingPoints[1] = new int[] { posX - 1, posY + 2 };
+            movingPoints[2] = new int[] { posX + 2, posY + 1 };
+            movingPoints[3] = new int[] { posX + 1, posY + 2 };
 
-            moves[4] = new int[] { posX - 2, posY - 1 };
-            moves[5] = new int[] { posX - 1, posY - 2 };
-            moves[6] = new int[] { posX + 2, posY - 1 };
-            moves[7] = new int[] { posX + 1, posY - 2 };
-            marking();
+            movingPoints[4] = new int[] { posX - 2, posY - 1 };
+            movingPoints[5] = new int[] { posX - 1, posY - 2 };
+            movingPoints[6] = new int[] { posX + 2, posY - 1 };
+            movingPoints[7] = new int[] { posX + 1, posY - 2 };
+
+            MarkAllMovePointsOfIndexedPieces();
         }
 
-        private int bishop()
+        private void King()
         {
-            int actual = 0;
+            movingPoints = new int[8][];
 
-            int curX = posX, curY = posY;
+            movingPoints[0] = new int[] { posX - 1, posY - 1 };
+            movingPoints[1] = new int[] { posX - 1, posY };
+            movingPoints[2] = new int[] { posX - 1, posY + 1 };
+            movingPoints[3] = new int[] { posX + 1, posY };
+
+            movingPoints[4] = new int[] { posX + 1, posY - 1 };
+            movingPoints[5] = new int[] { posX, posY - 1 };
+            movingPoints[6] = new int[] { posX + 1, posY + 1 };
+            movingPoints[7] = new int[] { posX, posY + 1 };
+
+            MarkAllMovePointsOfIndexedPieces();
+        }
+
+      
+        private int Bishop()
+        {
+            int totalCountsOfMovingPoints = 0;
+
+            int nextX = posX, nextY = posY;
+
+            void NextPosInDirectionAndMark(int x, int y, int direction) { 
+                movingPoints[totalCountsOfMovingPoints] = new int[] { x, y };
+                chessTable.Mark(movingPoints[totalCountsOfMovingPoints][0], movingPoints[totalCountsOfMovingPoints][1], this, direction);
+                nextX = x;
+                nextY = y;
+                totalCountsOfMovingPoints++;
+            }
+
+           
             for (int i = posX+1; i < 8; i++)
                 for (int j = posY+1; j < 8; j++)
                 {
-                    if ((i - curX == 1) && (j - curY == 1) && (coordinates[0][0] >= i && coordinates[0][1] >= j)) {
-                        moves[actual] = new int[] { i, j };
-                        chessTable.mark(moves[actual][0], moves[actual][1], this, 0);
-                        curX = i;
-                        curY = j;
-                        actual++;
+                    if ((i - nextX == 1) && (j - nextY == 1) && (directions[0][0] >= i && directions[0][1] >= j)) {
+                        NextPosInDirectionAndMark(i, j, 0);
                     }
                 }
-            coordinates[0] = new int[] { curX, curY };
+            directions[0] = new int[] { nextX, nextY };
 
-            curX = posX; curY = posY;
+            nextX = posX; nextY = posY;
             for (int i = posX+1; i < 8; i++)
                 for (int j = posY-1; j >= 0; j--)
                 {
-                    if((i - curX == 1) && (j - curY == -1) && (coordinates[1][0] >= i && coordinates[1][1] <= j)) { 
-                        moves[actual] = new int[] { i, j };
-                        chessTable.mark(moves[actual][0], moves[actual][1], this, 1);
-                        curX = i;
-                        curY = j;
-                        actual++;
+                    if((i - nextX == 1) && (j - nextY == -1) && (directions[1][0] >= i && directions[1][1] <= j)) {
+                        NextPosInDirectionAndMark(i, j, 1);
                     }
                 }
-            coordinates[1] = new int[] { curX, curY };
+            directions[1] = new int[] { nextX, nextY };
 
-            curX = posX; curY = posY;
+            nextX = posX; nextY = posY;
             for (int i = posX-1; i >= 0; i--)
                 for (int j = posY-1; j >= 0; j--)
                 {
-                    if ((i - curX == -1) && (j - curY == -1) && (coordinates[2][0] <= i && coordinates[2][1] <= j))
+                    if ((i - nextX == -1) && (j - nextY == -1) && (directions[2][0] <= i && directions[2][1] <= j))
                     {
-                        moves[actual] = new int[] { i, j };
-                        chessTable.mark(moves[actual][0], moves[actual][1], this, 2);
-                        curX = i;
-                        curY = j;
-                        actual++;
+                        NextPosInDirectionAndMark(i, j, 2);
                     }
                    
                 }
-            coordinates[2] = new int[] { curX, curY  };
+            directions[2] = new int[] { nextX, nextY  };
 
-            curX = posX; curY = posY;
+            nextX = posX; nextY = posY;
             for (int i = posX-1; i >= 0; i--)
                 for (int j = posY+1; j < 8; j++)
                 {
-                    if ((i - curX == -1) && (j - curY == 1) && (coordinates[3][0] <= i && coordinates[3][1] >= j))
+                    if ((i - nextX == -1) && (j - nextY == 1) && (directions[3][0] <= i && directions[3][1] >= j))
                     {
-                        moves[actual] = new int[] { i, j };
-                        chessTable.mark(moves[actual][0], moves[actual][1], this, 3);
-                        curX = i;
-                        curY = j;
-                        actual++;
+                        NextPosInDirectionAndMark(i, j, 3);
                     }
                 }
-            coordinates[3] = new int[] { curX, curY };
-            return actual;
+            directions[3] = new int[] { nextX, nextY };
+            return totalCountsOfMovingPoints;
         }
 
-        private void rook(int actual = 0)
+        private void Rook(int totalCountsWithBishop = 0) // the transmitted parameter will not be zero only if the queen's moves are calculated
         {
+            int totalCountsOfMovingPoints = totalCountsWithBishop;
+            int nextX = posX, nextY = posY;
 
-            int curX = posX;
+            void NextPosInDirectionAndMark(int valueI, bool isX, int direction)
+            {
+                if (isX) {
+                    movingPoints[totalCountsOfMovingPoints] = new int[] { valueI, posY };
+                    nextX = valueI;
+                }
+                else {
+                    movingPoints[totalCountsOfMovingPoints] = new int[] { posX, valueI };
+                    nextY = valueI;
+                }
+                chessTable.Mark(movingPoints[totalCountsOfMovingPoints][0], movingPoints[totalCountsOfMovingPoints][1], this, direction);
+                totalCountsOfMovingPoints++;
+            }
+
             for (int i = posX+1; i < 8; i++)
-                if ((coordinates[4][0] >= i))
-                {
-                    moves[actual] = new int[] { i, posY };
-                    chessTable.mark(moves[actual][0], moves[actual][1], this, 4);
-                    curX = i;
-                    actual++;
+                if ((directions[4][0] >= i)) { 
+                   NextPosInDirectionAndMark(i, true, 4);
                 }
-            coordinates[4] = new int[] { curX, posY };
 
-            int curY = posY;
+            directions[4] = new int[] { nextX, posY };
+
+            nextY = posY;
+
             for (int i = posY - 1; i > -1; i--)
-                if ((coordinates[5][1] <= i))
+                if ((directions[5][1] <= i))
                 {
-                    moves[actual] = new int[] { posX, i };
-                    chessTable.mark(moves[actual][0], moves[actual][1], this, 5);
-                    curY = i;
-                    actual++;
+                    NextPosInDirectionAndMark(i, false, 5);
                 }
-            coordinates[5] = new int[] { posX, curY };
-            
-            curX = posX;
-            for (int i = posX - 1; i > -1; i--)
-                if ((coordinates[6][0] <= i))
-                {
-                    moves[actual] = new int[] { i, posY };
-                    chessTable.mark(moves[actual][0], moves[actual][1], this, 6);
-                    curX = i;
-                    actual++;
-                }
-            coordinates[6] = new int[] { curX, posY };
 
-            curY = posY;
-            for (int i = posY + 1; i < 8; i++)
-                if ((coordinates[7][1] >= i))
+            directions[5] = new int[] { posX, nextY };
+            
+            nextX = posX;
+            for (int i = posX - 1; i > -1; i--)
+                if ((directions[6][0] <= i))
                 {
-                    moves[actual] = new int[] { posX, i };
-                    chessTable.mark(moves[actual][0], moves[actual][1], this, 7);
-                    curY = i;
-                    actual++;
+                    NextPosInDirectionAndMark(i, true, 6);
                 }
-            coordinates[7] = new int[] { posX, curY };
+
+            directions[6] = new int[] { nextX, posY };
+
+            nextY = posY;
+            for (int i = posY + 1; i < 8; i++)
+                if ((directions[7][1] >= i))
+                {
+                    NextPosInDirectionAndMark(i, false, 7);
+                }
+
+            directions[7] = new int[] { posX, nextY };
 
         }
-        private void queen()
+        private void Queen()
         {
-            int a = bishop();
+            int a = Bishop();
             int[][] bishopDirections = new int [8][];
-            coordinates.CopyTo(bishopDirections, 0);
+            directions.CopyTo(bishopDirections, 0);
 
-            rook(a);
+            Rook(a);
             int[][] rookDirections = new int[8][];
-            coordinates.CopyTo(rookDirections, 0);
+            directions.CopyTo(rookDirections, 0);
 
             for (int i = 0; i <= 3; i++)
-                coordinates[i] = bishopDirections[i];
+                directions[i] = bishopDirections[i];
             for (int i = 4; i <= 7; i++)
-                coordinates[i] = rookDirections[i];
+                directions[i] = rookDirections[i];
         }
 
-        private void king()
-        {
-            moves = new int[8][];
-                moves[0] = new int[] { posX - 1, posY - 1 };
-                moves[1] = new int[] { posX - 1, posY };
-                moves[2] = new int[] { posX - 1, posY + 1 };
-                moves[3] = new int[] { posX + 1, posY };
-                moves[4] = new int[] { posX + 1, posY - 1 };
-                moves[5] = new int[] { posX, posY - 1 };
-                moves[6] = new int[] { posX + 1, posY + 1 };
-                moves[7] = new int[] { posX, posY + 1 };
-
-            marking();
-        }
 
         public void condition()
         {
             switch (type)
             {
                 case "king":
-                    king();
+                    King();
                     break;
                 case "queen":
-                    queen();
+                    Queen();
                     break;
                 case "rook":
-                    rook();
+                    Rook();
                     break;
                 case "bishop":
-                    bishop();
+                    Bishop();
                     break;
                 case "horse":
-                    horse();
+                    Horse();
                     break;
                 case "pawn":
-                    pawn();
+                    Pawn();
                     break;
                 default:
                     //cell();

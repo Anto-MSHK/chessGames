@@ -43,7 +43,7 @@ namespace Chess
             }
         }
 
-        public int addPiece(int x, int y, Cell piece)
+        public int AddPiece(int x, int y, Cell piece)
         {
             if (x > 7 || y > 7)
                 return 2;
@@ -69,29 +69,29 @@ namespace Chess
             return 1;
             
         }
-        public void mark (int x, int y, Cell pieceInitiator, int dir)
+        public void Mark (int x, int y, Cell pieceInitiator, int dir)
         {
             Cell pieceMarked = table[x, y];
 
-            Cell pieceObsolete = table[pieceInitiator.coordinates[dir][0], pieceInitiator.coordinates[dir][1]];
+            Cell pieceObsolete = table[pieceInitiator.directions[dir][0], pieceInitiator.directions[dir][1]];
 
             int[] coordInitiator = new int[] { pieceInitiator.posX, pieceInitiator.posY };
 
             int[] currentCoord = pieceMarked.isProtected.Find(coord => coord != null && coord.SequenceEqual(coordInitiator));
             if (pieceInitiator.side == pieceMarked.side && currentCoord == null) {
                 pieceMarked.isProtected.Add(new int[] { pieceInitiator.posX, pieceInitiator.posY });
-                pieceInitiator.coordinates[dir] = new int[] { x, y };
+                pieceInitiator.directions[dir] = new int[] { x, y };
                 int obsolete = pieceObsolete.isProtected.FindIndex(coord => coord != null && coord.SequenceEqual(coordInitiator));
-                if(obsolete != -1 && pieceObsolete.coordinates[dir] != pieceMarked.coordinates[dir])
+                if(obsolete != -1 && pieceObsolete.directions[dir] != pieceMarked.directions[dir])
                     pieceObsolete.isProtected[obsolete] = null;
 
             }
             currentCoord = pieceMarked.isAttacked.Find(coord => coord != null && coord.SequenceEqual(coordInitiator));
             if (pieceInitiator.side != pieceMarked.side && pieceMarked.side != 3) {
                 pieceMarked.isAttacked.Add(new int[] { pieceInitiator.posX, pieceInitiator.posY });
-                pieceInitiator.coordinates[dir] = new int[] { x, y };
+                pieceInitiator.directions[dir] = new int[] { x, y };
                 int obsolete = pieceObsolete.isAttacked.FindIndex(coord => coord != null && coord.SequenceEqual(coordInitiator));
-                if (obsolete != -1 && pieceObsolete.coordinates[dir] != pieceMarked.coordinates[dir])
+                if (obsolete != -1 && pieceObsolete.directions[dir] != pieceMarked.directions[dir])
                     pieceObsolete.isAttacked[obsolete] = null;
             }
             else

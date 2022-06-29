@@ -45,7 +45,7 @@ namespace Chess
                     break;
             }
 
-            int pieceAddSuccess = cheseTable.addPiece(x-1, y-1, piece);
+            int pieceAddSuccess = cheseTable.AddPiece(x-1, y-1, piece);
 
             if (pieceAddSuccess == 0)
             {
