@@ -47,11 +47,6 @@ namespace Chess
 
             int pieceAddSuccess = cheseTable.AddPiece(x-1, y-1, piece);
 
-            if (pieceAddSuccess == 0)
-            {
-                
-            }
-
             return pieceAddSuccess;
         }
 

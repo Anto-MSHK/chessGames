@@ -22,7 +22,7 @@ namespace Chess
 
         private ChessTable chessTable;
 
-        private void ResetDirections()
+        public void ResetDirections()
         {
             directions[0] = new int[] { 7, 7 };
             directions[1] = new int[] { 7, 0 };
@@ -53,21 +53,6 @@ namespace Chess
             this.posX = posX;
             this.posY = posY;
         }
-
-<<<<<<< HEAD
-=======
-        public void resetCoordinates()
-        {
-            coordinates[0] = new int[] { 7, 7 };
-            coordinates[1] = new int[] { 7, 0 };
-            coordinates[2] = new int[] { 0, 0 };
-            coordinates[3] = new int[] { 0, 7 };
-            coordinates[4] = new int[] { 7, 7 };
-            coordinates[5] = new int[] { 7, 0 };
-            coordinates[6] = new int[] { 0, 0 };
-            coordinates[7] = new int[] { 0, 7 };
-        }
->>>>>>> 081c05da8a5c6132cec3a041e8f6602247f1daed
 
         private void MarkAllMovePointsOfIndexedPieces()
         {
